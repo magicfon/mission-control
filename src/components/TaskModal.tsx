@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { X, Save, Trash2, Activity, Package, Bot, ClipboardList, Plus } from 'lucide-react';
+import { X, Save, Trash2, Activity, Package, Bot, ClipboardList, Plus, MessageSquareQuestion } from 'lucide-react';
 import { useMissionControl } from '@/lib/store';
 import { triggerAutoDispatch, shouldTriggerAutoDispatch } from '@/lib/auto-dispatch';
 import { ActivityLog } from './ActivityLog';
@@ -9,9 +9,10 @@ import { DeliverablesList } from './DeliverablesList';
 import { SessionsList } from './SessionsList';
 import { PlanningTab } from './PlanningTab';
 import { AgentModal } from './AgentModal';
+import { DecisionPanel } from './DecisionPanel';
 import type { Task, TaskPriority, TaskStatus } from '@/lib/types';
 
-type TabType = 'overview' | 'planning' | 'activity' | 'deliverables' | 'sessions';
+type TabType = 'overview' | 'planning' | 'decision' | 'activity' | 'deliverables' | 'sessions';
 
 interface TaskModalProps {
   task?: Task;
@@ -147,6 +148,7 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
   const tabs = [
     { id: 'overview' as TabType, label: 'Overview', icon: null },
     { id: 'planning' as TabType, label: 'Planning', icon: <ClipboardList className="w-4 h-4" /> },
+    { id: 'decision' as TabType, label: 'Decision', icon: <MessageSquareQuestion className="w-4 h-4" /> },
     { id: 'activity' as TabType, label: 'Activity', icon: <Activity className="w-4 h-4" /> },
     { id: 'deliverables' as TabType, label: 'Deliverables', icon: <Package className="w-4 h-4" /> },
     { id: 'sessions' as TabType, label: 'Sessions', icon: <Bot className="w-4 h-4" /> },
@@ -322,6 +324,13 @@ export function TaskModal({ task, onClose, workspaceId }: TaskModalProps) {
               taskId={task.id}
               onSpecLocked={handleSpecLocked}
             />
+          )}
+
+          {/* Decision Tab */}
+          {activeTab === 'decision' && task && (
+            <div className="p-4 overflow-y-auto">
+              <DecisionPanel taskId={task.id} />
+            </div>
           )}
 
           {/* Activity Tab */}
