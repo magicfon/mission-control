@@ -153,6 +153,21 @@ export class OpenClawClient extends EventEmitter {
   }
 
   async connect(): Promise<void> {
+    // Re-check environment variable on each connection attempt
+    // This allows runtime changes to OPENCLAW_DISABLE_DEVICE_IDENTITY
+    const disableDeviceIdentity = process.env.OPENCLAW_DISABLE_DEVICE_IDENTITY === 'true';
+    if (disableDeviceIdentity && this.deviceIdentity) {
+      console.log('[OpenClaw] Device identity disabled via env var, clearing cached identity');
+      this.deviceIdentity = null;
+    } else if (!disableDeviceIdentity && !this.deviceIdentity) {
+      try {
+        this.deviceIdentity = loadOrCreateDeviceIdentity();
+        console.log('[OpenClaw] Device identity loaded:', this.deviceIdentity.deviceId);
+      } catch (err) {
+        console.warn('[OpenClaw] Failed to load device identity:', err);
+      }
+    }
+
     // If already connected, return immediately
     if (this.connected && this.ws?.readyState === WebSocket.OPEN) {
       return;
