@@ -104,12 +104,17 @@ export class OpenClawClient extends EventEmitter {
     this.token = token;
     // Prevent Node.js from throwing on unhandled 'error' events
     this.on('error', () => {});
-    // Load device identity for pairing
-    try {
-      this.deviceIdentity = loadOrCreateDeviceIdentity();
-      console.log('[OpenClaw] Device identity loaded:', this.deviceIdentity.deviceId);
-    } catch (err) {
-      console.warn('[OpenClaw] Failed to load device identity, will connect without:', err);
+    // Load device identity for pairing (can be disabled via env var)
+    const disableDeviceIdentity = process.env.OPENCLAW_DISABLE_DEVICE_IDENTITY === 'true';
+    if (!disableDeviceIdentity) {
+      try {
+        this.deviceIdentity = loadOrCreateDeviceIdentity();
+        console.log('[OpenClaw] Device identity loaded:', this.deviceIdentity.deviceId);
+      } catch (err) {
+        console.warn('[OpenClaw] Failed to load device identity, will connect without:', err);
+      }
+    } else {
+      console.log('[OpenClaw] Device identity disabled via OPENCLAW_DISABLE_DEVICE_IDENTITY');
     }
 // Start periodic cleanup to prevent unbounded cache growth
     this.startPeriodicCleanup();
