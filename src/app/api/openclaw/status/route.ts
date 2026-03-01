@@ -3,6 +3,13 @@ import { getOpenClawClient } from '@/lib/openclaw/client';
 
 // GET /api/openclaw/status - Check OpenClaw connection status
 export async function GET() {
+  // Debug: log environment variables
+  console.log('[API] Environment check:', {
+    OPENCLAW_GATEWAY_URL: process.env.OPENCLAW_GATEWAY_URL,
+    OPENCLAW_GATEWAY_TOKEN: process.env.OPENCLAW_GATEWAY_TOKEN ? '***set***' : 'NOT SET',
+    OPENCLAW_DISABLE_DEVICE_IDENTITY: process.env.OPENCLAW_DISABLE_DEVICE_IDENTITY,
+  });
+
   try {
     const client = getOpenClawClient();
 
