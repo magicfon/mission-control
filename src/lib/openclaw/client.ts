@@ -106,6 +106,7 @@ export class OpenClawClient extends EventEmitter {
     this.on('error', () => {});
     // Load device identity for pairing (can be disabled via env var)
     const disableDeviceIdentity = process.env.OPENCLAW_DISABLE_DEVICE_IDENTITY === 'true';
+    console.log('[OpenClaw] OPENCLAW_DISABLE_DEVICE_IDENTITY:', process.env.OPENCLAW_DISABLE_DEVICE_IDENTITY, '-> disabled:', disableDeviceIdentity);
     if (!disableDeviceIdentity) {
       try {
         this.deviceIdentity = loadOrCreateDeviceIdentity();
