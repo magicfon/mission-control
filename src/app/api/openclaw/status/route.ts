@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { getOpenClawClient } from '@/lib/openclaw/client';
 
 // GET /api/openclaw/status - Check OpenClaw connection status
+export const dynamic = 'force-dynamic'; // Disable caching
+
 export async function GET() {
   // Debug: log environment variables
   console.log('[API] Environment check:', {
